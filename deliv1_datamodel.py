@@ -16,6 +16,7 @@ df_order = pd.read_excel(githubpath + "my_shop_data.xlsx", sheet_name="order")
 df_employee = pd.read_excel(githubpath + "my_shop_data.xlsx", sheet_name="employee")
 df_products = pd.read_excel(githubpath + "my_shop_data.xlsx", sheet_name="products")
 
+
 def get_data():
     # Employee name
     df_employee['emp_name'] = df_employee['firstname'] + ' ' + df_employee['lastname']
@@ -33,23 +34,9 @@ def get_data():
     # ***************************************
     # Data - Relationer
     # ***************************************
-    
-    order = pd.merge(df_order, df_products, how='left', on='product_id')
-        
-    # print('This is orders after merging orders + products')
-    # print(order)
-
-    order = pd.merge(order, df_employee, how='left', on='employee_id')
-    # print(order)
-    
-    order = pd.merge(order, df_customers, how='left', on='customer_id')
-    # print(order)
-
-    order['productname'] = order['productname'].replace(np.nan, 'unknown')
-    order['type'] = order['type'].replace(np.nan, 'unknown')
-    order['cust_name'] = order['cust_name'].fillna(0)
-    order['city'] = order['city'].fillna(0)
-    order['country'] = order['country'].fillna(0)
+    order = pd.merge(df_order, df_products, on='product_id')
+    order = pd.merge(order, df_employee, on='employee_id')
+    order = pd.merge(order, df_customers, on='customer_id')
 
     # Order - Select colomns
     order = order[['order_id', 
@@ -58,8 +45,6 @@ def get_data():
                 'employee_id', 'emp_name', 
                 'orderdate', 'deliverydate', 'deliverytime', 'orderyear', 'ordermonth',
                 'total']]
-
-    # print(order)
 
     # Retuner til app.py
     return order
